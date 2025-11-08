@@ -221,7 +221,6 @@ vAPI.scriptletsInjector = (( ) => {
             if ( hostname !== '' && details.hostname !== hostname ) { return; }
             try {
 				const scriptlets = function(){};
-				scriptlets();
                 self[Symbol.for("uBO_scriptletsInjected")] = details.filters;
             } catch {
             }
