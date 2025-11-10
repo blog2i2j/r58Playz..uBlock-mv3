@@ -8,6 +8,25 @@
 	<style>
 		:root {
 			font-family: sans-serif;
+			max-width: 60rem;
+			margin: auto;
+		}
+
+		code {
+			background: #ddd;
+			padding: 0.1em 0.3em;
+			border-radius: 0.25em;
+		}
+
+		@media (prefers-color-scheme: dark) {
+			:root {
+				background: #111;
+				color: #fff;
+			}
+
+			code {
+				background: #222;
+			}
 		}
 	</style>
 </head>
@@ -16,10 +35,35 @@
 	<div>
 		<h1>uBlock Origin MV3</h1>
 		<p>
-			An unofficial port of uBlock Origin to Manifest V3, enabling webRequestBlocking with policy installation or `--allowlisted-extension-id`.
+			An unofficial port of uBlock Origin to Manifest V3, enabling <code>webRequestBlocking</code> with policy installation or <code>--allowlisted-extension-id</code>.
+			This website currently hosts version <code>__CRX3_VERSION__</code> of uBlock Origin. You can view the <a href="/update.xml">update.xml</a> for the direct download link. 
 		</p>
 		<p>
-			Check out the <a href="https://github.com/r58playz/uBlock-mv3">GitHub</a>!
+			You can use prebuilt versions of this port by adding <code>"__CRX3_ID__;https://__PAGES_URL__/update.xml"</code> to your <code>ExtensionInstallForcelist</code> policy.
+			<ul>
+				<li>
+					Linux:
+					<ol>
+						<li>Create <code>/etc/opt/chrome/policies/managed/policy.json</code> or <code>/etc/chromium/policies/managed/policy.json</code>.</li>
+						<li>Write <code>{ "ExtensionInstallForcelist": ["__CRX3_ID__;https://__PAGES_URL__/update.xml"] }</code> into the file.</li>
+					</ol>
+				</li>
+				<li>
+					Windows:
+					<ol>
+						<li>Open regedit, create the key <code>Software\Policies\Google\Chrome\ExtensionInstallForcelist</code>.</li>
+						<li>Add a string value named <code>1</code> (if it already exists choose the next available number).</li>
+						<li>Set it to <code>__CRX3_ID__;https://__PAGES_URL__/update.xml</code></li>
+					</ol>
+				</li>
+				<li>
+					macOS: no clue
+				</li>
+			</ul>
+			Make sure to enable <code>Allow User Scripts</code> in the extension details after it gets force-installed.
+		</p>
+		<p>
+			Check out the <a href="https://github.com/r58playz/uBlock-mv3">GitHub</a> if you want to install it by sideloading and using <code>--allowlisted-extension-id</code>.
 		</p>
 	</div>
 </body>

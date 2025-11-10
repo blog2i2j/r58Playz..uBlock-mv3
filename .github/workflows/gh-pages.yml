@@ -36,7 +36,7 @@ jobs:
         run: |
           MANIFEST_PATH="${{ env.DIST_DIR }}/manifest.json"
           # Use temp file to avoid issues with in-place editing
-          jq --arg url "${{ vars.PAGES_URL }}/update.xml" '.update_url = $url' "$MANIFEST_PATH" > tmp.$$.json && mv tmp.$$.json "$MANIFEST_PATH"
+          jq --arg url "https://${{ vars.PAGES_URL }}/update.xml" '.update_url = $url' "$MANIFEST_PATH" > tmp.$$.json && mv tmp.$$.json "$MANIFEST_PATH"
 
       - name: Build .crx file
         env:
@@ -46,7 +46,7 @@ jobs:
 
       - name: Generate update.xml
         run: |
-          CRX_URL="${{ vars.PAGES_URL }}/${{ env.CRX_FILENAME }}"
+          CRX_URL="https://${{ vars.PAGES_URL }}/${{ env.CRX_FILENAME }}"
           cat <<EOF > update.xml
           <?xml version='1.0' encoding='UTF-8'?>
           <gupdate xmlns='http://www.google.com/update2/response' protocol='2.0'>
@@ -60,6 +60,7 @@ jobs:
         run: |
           mkdir -p _site
           cp .github/index.html _site/index.html
+          sed -e 's/__CRX3_ID__/${{ vars.CRX3_ID }}/g' -e 's/__PAGES_URL__/${{ vars.PAGES_URL }}/g' -e 's/__CRX3_VERSION__/${{ env.TAG }}/g' -i _site/index.html
           mv "${{ env.CRX_FILENAME }}" update.xml _site/
 
       - name: Upload artifact for GitHub Pages
