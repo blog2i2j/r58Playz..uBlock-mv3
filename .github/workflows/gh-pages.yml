@@ -6,7 +6,7 @@ on:
       - master
 
 permissions:
-  contents: read
+  contents: write 
   pages: write
   id-token: write
 
@@ -43,6 +43,7 @@ jobs:
           CRX3_PRIVATE_KEY: ${{ secrets.CRX3_PRIVATE_KEY }}
         run: |
           echo "$CRX3_PRIVATE_KEY" | npx crx3@1.1.3 -p /dev/stdin -o "${{ env.CRX_FILENAME }}" "${{ env.DIST_DIR }}/"
+          cp "${{ env.CRX_FILENAME }}" uBlock.crx
 
       - name: Generate update.xml
         run: |
@@ -62,6 +63,23 @@ jobs:
           cp .github/index.html _site/index.html
           sed -e 's/__CRX3_ID__/${{ vars.CRX3_ID }}/g' -e 's/__PAGES_URL__/${{ vars.PAGES_URL }}/g' -e 's/__CRX3_VERSION__/${{ env.TAG }}/g' -i _site/index.html
           mv "${{ env.CRX_FILENAME }}" update.xml _site/
+
+      - name: Delete old release and tag
+        uses: dev-drprasad/delete-tag-and-release@v1.1
+        with:
+          delete_release: true
+          tag_name: latest
+          github_token: ${{ github.token }}
+
+      - name: Release to GitHub
+        uses: ncipollo/release-action@v1
+        with:
+          name: Continuous Build
+          tag: latest
+          commit: master
+          body: "Install this CRX, then set `--allowlisted-extension-id=<uBO-extension-id>` as a command line flag, replacing `<uBO-extension-id>` with the extension ID of the CRX. You should probably use https://ublock.r58playz.dev/ instead though."
+          artifacts: uBlock.crx
+          prerelease: true
 
       - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v3
